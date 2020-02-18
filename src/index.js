@@ -3,6 +3,7 @@ const app = express();
 require('dotenv').config();
 const bodyParser = require('body-parser');
 const userRouter = require('./users/user.router');
+const adminRouter = require('./admin/admin.router');
 const seq = require('./database/dbmysql');
 
 app.use(bodyParser.urlencoded({
@@ -11,7 +12,7 @@ app.use(bodyParser.urlencoded({
 
 app.use(bodyParser.json());
 
-app.use('/api', userRouter);
+app.use('/api', userRouter, adminRouter);
 
 
 app.use((error, req, res, next) => {

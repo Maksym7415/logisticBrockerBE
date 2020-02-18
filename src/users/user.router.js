@@ -1,5 +1,6 @@
-const {getUser, addUser, changeUserPassword, deleteUser, authUser/*, secretPage*/} = require('./user.controller');
+const {getUser, addUser, changeUserPassword, deleteUser, authUser, secretPage} = require('./user.controller');
 const router = require("express").Router();
+const verifyInfo = require('./verifyInfo');
 
 router.get('/getUser', getUser);
 
@@ -11,7 +12,7 @@ router.delete('/deleteUser', deleteUser);
 
 router.post('/authUser', authUser);
 
-/*router.post('/secretPage', secretPage);*/
+router.get('/secretPage', verifyInfo, secretPage);
 
 module.exports = router;
 

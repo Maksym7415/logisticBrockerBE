@@ -1,4 +1,3 @@
-const data = require('./user.service');
 const createError = require('http-errors');
 const userTable = require('../models/user');
 const tokenTable = require('../models/token');
@@ -25,6 +24,7 @@ module.exports = {
             const user = await userTable.create({
                 login: req.body.login,
                 password: password,
+                role: 'user',
             });
             await tokenTable.create({
                 fk_user: user.user_id,
@@ -57,12 +57,29 @@ module.exports = {
 
     deleteUser: async (req, res, next) => {
         try {
-            const promise = await userTable.destroy({
+            let data = await userTable.findOne({
                 where: {
                     login: req.body.login
                 }
-            })
-            res.send('Account successfully deleted!');
+            });
+
+            await tokenTable.destroy({
+                where: {
+                    fk_user: data.user_id
+                }
+            });
+
+            const promise = await userTable.destroy({
+                where: {
+                    login: data.login
+                }
+            });
+
+            if (!promise) {
+                next(createError(400, 'No such user'));
+            } else {
+                res.send('User successfully deleted')
+            }
         } catch (error) {
             next(createError(400, "delete", {
                 stack: error
@@ -77,11 +94,10 @@ module.exports = {
                     login: req.body.login
                 }
             });
-
             if (bcrypt.compareSync(req.body.password, user.password)) {
                 let token = jwt.sign({
-                    login: req.body.login,
-                    password: req.body.password
+                    id: user.user_id,
+                    role: user.role,
                 }, 'secretKey');
 
                 await tokenTable.update({
@@ -100,5 +116,12 @@ module.exports = {
         }
     },
 
-    
+    secretPage: async (req, res, next) => {
+        try {
+            if (req.token.role == 'user') res.send("Hello user");
+            else res.send('Hello admin');
+        } catch (error) {
+            next(createError(403, 'You are not authorized'));
+        }
+    },
 }

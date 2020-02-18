@@ -17,4 +17,8 @@ module.exports = seq.define('user', {
         type: Sequelize.STRING(200),
         allowNull: false,
     },
+    role:{
+        type: Sequelize.STRING(10),
+        allowNull: false,
+    }
 })

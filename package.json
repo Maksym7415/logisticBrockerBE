@@ -18,8 +18,11 @@
     "md5": "^2.2.1",
     "mysql": "^2.18.1",
     "mysql2": "^2.1.0",
-    "nodemon": "^2.0.2",
+    "nodemailer": "^6.4.2",
     "postgres": "^1.0.2",
     "sequelize": "^5.21.4"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
   }
 }
