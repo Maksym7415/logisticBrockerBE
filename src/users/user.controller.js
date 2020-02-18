@@ -98,5 +98,6 @@ module.exports = {
         } catch {
             next(createError(400, 'Wrong login or password!'));
         }
-    }
+    },
+    
 }
