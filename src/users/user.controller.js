@@ -1,6 +1,9 @@
 const createError = require('http-errors');
 const userTable = require('../models/user');
-const tokenTable = require('../models/token');
+const adminTable = require('../models/admin');
+const driverTable = require('../models/driver');
+const managerTable = require('../models/manager');
+const vehicleTable = require('../models/vehicle');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
@@ -13,11 +16,58 @@ decryptInfo = (info) => {
 }
 
 module.exports = {
+
     getUser: async (req, res) => {
         const promise = await userTable.findAll();
         res.send(promise);
     },
 
+    authorization: async (req, res, next) => {
+        try{
+            const {login, password} = req.body;
+            let user = await userTable.findOne({
+                where: {
+                    login: login
+                }
+            });
+            
+            if(user && bcrypt.compareSync(password, user.password)){
+                let token = jwt.sign({
+                    id_user: user.id_user,
+                    role: user.role,},
+                    'secretKey'
+                );
+    
+                user.token = token;
+                await user.save();  
+                res.send(token);
+            }
+            else {
+                next(createError(400, 'Wrong login or password'));
+            }
+        }
+        catch(error){
+            console.log(error);
+        }
+    }
+    /*getAdmin: async(req, res) => {
+        const promise = await adminTable.findAll();
+        res.send(promise);
+    },
+    getDriver: async(req, res) => {
+        const promise = await driverTable.findAll();
+        res.send(promise);
+    },
+    getManager: async(req, res) => {
+        const promise = await managerTable.findAll();
+        res.send(promise);
+    },
+    getVehicle: async(req, res) => {
+        const promise = await vehicleTable.findAll();
+        res.send(promise);
+    },*/
+
+/*
     addUser: async (req, res, next) => {
         try {
             let password = decryptInfo(req.body.password);
@@ -123,5 +173,5 @@ module.exports = {
         } catch (error) {
             next(createError(403, 'You are not authorized'));
         }
-    },
+    },*/
 }

@@ -5,13 +5,13 @@ const {
     sendEmail
 } = require('./admin.controller');
 const router = require("express").Router();
-const verifyInfo = require('../users/verifyInfo');
+const verifyInfo = require('../verifyInfo');
 
-router.get('/getOrders', verifyInfo, getOrders);
+router.get('/getOrders', getOrders);
 
-router.post('/setOrders', verifyInfo, setOrders);
+router.post('/setOrders', setOrders);
 
-router.post('/filterOrders', verifyInfo, filterOrders);
+router.post('/filterOrders', filterOrders);
 
 router.post('/sendEmail', sendEmail);
 

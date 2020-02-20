@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 const seq = require('../database/dbmysql');
 
 module.exports = seq.define('user', {
-    user_id: {
+    id_user: {
         type: Sequelize.INTEGER(11),
         allowNull: false,
         autoIncrement: true,
@@ -20,5 +20,10 @@ module.exports = seq.define('user', {
     role:{
         type: Sequelize.STRING(10),
         allowNull: false,
+        defaultValue: 'driver',
+    },
+    token:{
+        type:Sequelize.TEXT,
+        allowNull:true,
     }
 })

@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const verifyInfo = (req, res, next) => {
     try {
         let header = req.get("Authorization")||'';
-        header = header.replace('bearer ', '');
+        header = header.replace('Bearer ', '');
         jwt.verify(header, 'secretKey', (err, data) => {
             if(err){
                 res.status(418).send('You are not authorized');
