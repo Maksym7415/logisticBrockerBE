@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize');
 const seq = require('../database/dbmysql');
 
+
 module.exports = seq.define('user', {
     id_user: {
         type: Sequelize.INTEGER(11),
@@ -26,4 +27,4 @@ module.exports = seq.define('user', {
         type:Sequelize.TEXT,
         allowNull:true,
     }
-})
+});

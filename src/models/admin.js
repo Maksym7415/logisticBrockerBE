@@ -2,6 +2,7 @@ const Sequelize = require('sequelize');
 const seq = require('../database/dbmysql');
 const userTable = require('./user');
 
+
 adminTable = seq.define('admin', {
     id_admin: {
         type: Sequelize.INTEGER(11),

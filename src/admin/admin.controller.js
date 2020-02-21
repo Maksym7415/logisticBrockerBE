@@ -1,6 +1,5 @@
 const createError = require('http-errors');
-const userTable = require('../models/user');
-const orderTable = require('../models/order');
+const adminTable = require('../models/admin');
 const {
     Op
 } = require("sequelize");

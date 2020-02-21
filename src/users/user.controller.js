@@ -1,11 +1,7 @@
 const createError = require('http-errors');
-const userTable = require('../models/user');
-const adminTable = require('../models/admin');
-const driverTable = require('../models/driver');
-const managerTable = require('../models/manager');
-const vehicleTable = require('../models/vehicle');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const userTable = require('../models/user');
 const saltRounds = 10;
 
 

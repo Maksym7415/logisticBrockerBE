@@ -31,7 +31,4 @@ vehicleTable = seq.define('vehicle', {
     },
 });
 
-vehicleTable.hasMany(driverVehicleTable, { foreignKey: {name:'fk_vehicle', allowNull:false}, foreignKeyConstraint: true });
-
-
 module.exports = vehicleTable;

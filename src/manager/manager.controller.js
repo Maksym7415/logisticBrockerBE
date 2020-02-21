@@ -1,8 +1,12 @@
 const createError = require('http-errors');
 const seq = require('../database/dbmysql');
-//нужно перезаписать бд через секвалайзер
 const brokerTable = require('../models/broker');
+const driverTable = require('../models/driver');
+const vehicleTable = require('../models/vehicle');
+const driverVehicleTable = require('../models/driver_vehicle');
+const managerTable = require('../models/manager');
 const nodemailer = require('nodemailer');
+const { QueryTypes } = require('sequelize');
 
 module.exports = {
     getOrders: async (req, res, next) => {
@@ -24,12 +28,11 @@ module.exports = {
             const promise = await seq.models.broker.findAll({
                 include: {
                     model: seq.models.order,
-                    attributes:{exclude:['createdAt', 'updatedAt', 'fk_broker']},
+                    attributes:{exclude:['fk_broker']},
                     where:{
                         id_order:req.body.order,
                     }
                 },
-                attributes:{exclude:['createdAt', 'updatedAt']},
             });
             res.json(promise);
         }
@@ -39,19 +42,40 @@ module.exports = {
     },
     getDrivers: async (req, res, next) => {
         try{
-            const promise = await seq.models.driver.findAll();
+            const promise = await seq.models.driver.findAll({
+                include:{
+                    model:seq.models.vehicle,
+                    as:'vehicles',
+                    through: {
+                        model: seq.model.driver_vehicle,
+                    }
+                }
+            });
             res.send(promise);
         }
         catch(error){
             next(createError(400, error));
         }
     },
-    /*sendMail: async (req, res, next) => {
-        try{
-
-        }
-        catch(error){
-            next(createError(400, error));
-        }
-    }*/
+    getStakes: async(req, res) => {
+        const promise = await seq.models.broker.findAll({
+            attributes:['id_broker', 'name'],
+            include:{
+                model:seq.models.order,
+                attributes:['id_order', 'pickup', 'deliver', 'air_miles', 'earth_miles'],
+                include:{
+                    model:seq.models.manager,
+                    attributes:['id_manager', 'name'],
+                    as:'managers',
+                    through:{
+                        model:seq.model.stake,
+                        attributes:['id_stake','driver_price', 'broker_price', 'percent'],
+                    }
+                }
+            }
+        })
+        //наилучший вариант 
+        //const promise = await seq.query('select * from `stakes`,`orders` where `fk_order` = `id_order`', {type: QueryTypes.SELECT});
+        res.send(promise);
+    }
 }

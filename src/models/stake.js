@@ -28,6 +28,14 @@ stakeTable = seq.define('stake', {
     status:{
         type: Sequelize.BOOLEAN,
         allowNull:true,
+    },
+    fk_driver:{
+        type: Sequelize.INTEGER(11),
+        allowNull: false,
+    },
+    fk_order:{
+        type: Sequelize.INTEGER(11),
+        allowNull: false,
     }
 });
 

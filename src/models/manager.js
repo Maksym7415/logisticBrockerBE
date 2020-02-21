@@ -14,6 +14,10 @@ managerTable = seq.define('manager', {
         type: Sequelize.STRING(30),
         allowNull: false,
     },
+    email:{
+        type: Sequelize.STRING(45),
+        allowNull:false,
+    },
 });
 
 managerTable.belongsTo(userTable, { foreignKey: {name:'fk_user', allowNull:false}, foreignKeyConstraint: true });

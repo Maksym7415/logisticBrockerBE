@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize');
 const seq = require('../database/dbmysql');
 const stakeTable = require('../models/stake');
+const managerTable = require('./manager');
 
 orderTable = seq.define('order', {
     id_order: {
@@ -49,5 +50,9 @@ orderTable = seq.define('order', {
 });
 
 orderTable.hasMany(stakeTable, { foreignKey: {name:'fk_order', allowNull:false}, foreignKeyConstraint: true });
+
+managerTable.belongsToMany(orderTable,{through:'stake', as: 'orders', foreignKey:'fk_manager', otherKey:'fk_order'});
+orderTable.belongsToMany(managerTable,{through:'stake', as: 'managers', foreignKey:'fk_order', otherKey:'fk_manager'});
+
 
 module.exports = orderTable;
