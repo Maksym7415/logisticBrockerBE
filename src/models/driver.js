@@ -18,9 +18,9 @@ driverTable = seq.define('driver', {
         allowNull: false,
     },
     status:{
-        type: Sequelize.BOOLEAN,
+        type: Sequelize.ENUM('Available', 'Not Available'),
         allowNull: false,
-        defaultValue: false,
+        defaultValue: 'Not Available',
     },
     phone:{
         type: Sequelize.STRING(15),

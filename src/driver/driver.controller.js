@@ -11,9 +11,12 @@ module.exports = {
                     through:{
                         model:seq.models.stake,
                         where:{
-                            status: true,
+                            status: 'Accepted',
                         }
                     }
+                },
+                where:{
+                    id_driver: req.body.id,
                 }
             });
             res.send(promise);

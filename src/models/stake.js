@@ -26,8 +26,9 @@ stakeTable = seq.define('stake', {
         allowNull: false,
     },
     status:{
-        type: Sequelize.BOOLEAN,
-        allowNull:true,
+        type: Sequelize.ENUM("Accepted", "Denied", "Pending"),
+        allowNull:false,
+        defaultValue:"Pending",
     },
     fk_driver:{
         type: Sequelize.INTEGER(11),
