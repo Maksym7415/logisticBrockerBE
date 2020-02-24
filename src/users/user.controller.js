@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const userTable = require('../models/user');
 const saltRounds = 10;
+const { Op } = require('sequelize')
 
 
 decryptInfo = (info) => {
@@ -13,11 +14,34 @@ decryptInfo = (info) => {
 
 module.exports = {
 
+    addUser: async (req, res, next) => {
+        let {login, password, role} = req.body
+        let user = await userTable.findAll({where: {[Op.or]: [
+            {login: login},
+            ]}
+        })
+        if (user.length === 0) {
+        try {
+            const hash = bcrypt.hashSync(password, 8)
+            let query = await userTable.create({
+                login,
+                password: bcrypt.hashSync(password, 8),
+                role   
+            }) // writing new user in database
+   // fsdfsd         
+            res.json(query)
+            } catch (e) {
+            next(createError(500, e))
+            }
+        }
+    },
+
     getUser: async (req, res) => {
         const promise = await userTable.findAll();
         res.send(promise);
     },
 
+    
     authorization: async (req, res, next) => {
         try{
             const {login, password} = req.body;
@@ -25,6 +49,7 @@ module.exports = {
                 where: {
                     login: login
                 }
+
             });
             
             if(user && bcrypt.compareSync(password, user.password)){
