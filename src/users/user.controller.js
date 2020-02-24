@@ -25,6 +25,7 @@ module.exports = {
                 where: {
                     login: login
                 }
+                
             });
             
             if(user && bcrypt.compareSync(password, user.password)){
