@@ -1,6 +1,5 @@
 const Sequelize = require('sequelize');
 const seq = require('../database/dbmysql');
-const driverVehicleTable = require('./driver_vehicle');
 
 vehicleTable = seq.define('vehicle', {
     id_vehicle: {

@@ -38,8 +38,7 @@ driverTable = seq.define('driver', {
 
 driverTable.belongsTo(userTable, { foreignKey: {name:'fk_user', allowNull:false}, foreignKeyConstraint: true });
 
-driverTable.belongsToMany(vehicleTable,{through:'driver_vehicle', as: 'vehicles', foreignKey:'fk_driver', otherKey:'fk_vehicle'});
-vehicleTable.belongsToMany(driverTable,{through:'driver_vehicle', as: 'drivers', foreignKey:'fk_vehicle', otherKey:'fk_driver'});
+driverTable.belongsTo(vehicleTable, { foreignKey: {name:'fk_vehicle', allowNull:false}, foreignKeyConstraint: true });
 
 driverTable.belongsToMany(orderTable,{through:'stake', as: 'orders', foreignKey:'fk_driver', otherKey:'fk_order'});
 orderTable.belongsToMany(driverTable,{through:'stake', as: 'drivers', foreignKey:'fk_order', otherKey:'fk_driver'});

@@ -3,7 +3,6 @@ const seq = require('../database/dbmysql');
 const brokerTable = require('../models/broker');
 const driverTable = require('../models/driver');
 const vehicleTable = require('../models/vehicle');
-const driverVehicleTable = require('../models/driver_vehicle');
 const managerTable = require('../models/manager');
 const nodemailer = require('nodemailer');
 const { QueryTypes } = require('sequelize');
@@ -11,13 +10,16 @@ const { QueryTypes } = require('sequelize');
 module.exports = {
     getOrders: async (req, res, next) => {
         try {
-            const promise = await seq.models.broker.findAll({
+            /*const promise = await seq.models.broker.findAll({
                 include: {
                     model: seq.models.order,
                     attributes:['id_order', 'received', 'pickup', 'deliver', 'air_miles', 'earth_miles'],
                 },
                 attributes:['id_broker', 'name'],
-            });
+            });*/
+            const promise = await seq.query('select `received`, `pickup`, `deliver`, `air_miles`,'+
+            '`earth_miles`, `name` from `orders`, `brokers` where `fk_broker` = `id_broker`', 
+            {type: QueryTypes.SELECT});
             res.json(promise);
         } catch (error) {
             next(createError(400, error));
@@ -45,10 +47,6 @@ module.exports = {
             const promise = await seq.models.driver.findAll({
                 include:{
                     model:seq.models.vehicle,
-                    as:'vehicles',
-                    through: {
-                        model: seq.model.driver_vehicle,
-                    }
                 }
             });
             res.send(promise);
