@@ -40,6 +40,7 @@ module.exports = {
         res.send(promise);
     },
 
+    
     authorization: async (req, res, next) => {
         try{
             const {login, password} = req.body;
