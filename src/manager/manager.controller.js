@@ -17,7 +17,7 @@ module.exports = {
                 },
                 attributes:['id_broker', 'name'],
             });*/
-            const promise = await seq.query('select `received`, `pickup`, `deliver`, `air_miles`,'+
+            const promise = await seq.query('select `id_order`, `received`, `pickup`, `deliver`, `air_miles`,'+
             '`earth_miles`, `name` from `orders`, `brokers` where `fk_broker` = `id_broker`', 
             {type: QueryTypes.SELECT});
             res.json(promise);

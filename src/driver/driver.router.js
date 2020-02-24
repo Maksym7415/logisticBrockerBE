@@ -1,4 +1,6 @@
-const { getDriver } = require('./driver.controller');
+const {
+    getDriver
+} = require('./driver.controller');
 const router = require("express").Router();
 
 router.post('/driver/getDriver', getDriver);
