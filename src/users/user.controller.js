@@ -28,6 +28,7 @@ module.exports = {
                 password: bcrypt.hashSync(password, 8),
                 role   
             }) // writing new user in database
+   // fsdfsd         
             res.json(query)
             } catch (e) {
             next(createError(500, e))
@@ -48,7 +49,7 @@ module.exports = {
                 where: {
                     login: login
                 }
-                
+
             });
             
             if(user && bcrypt.compareSync(password, user.password)){
