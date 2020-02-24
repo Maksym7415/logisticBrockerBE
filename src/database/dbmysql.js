@@ -10,6 +10,6 @@ const sequelize = new Sequelize(process.env.MYSQL_DB, process.env.DB_USER, proce
       collate: 'utf8_general_ci',
       timestamps: false,
     }
-  });
+});
 
 module.exports = sequelize;

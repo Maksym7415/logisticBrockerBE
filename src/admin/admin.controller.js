@@ -54,28 +54,4 @@ module.exports = {
             next(createError(400, error));
         }
     },
-
-    sendEmail: async (req, res) => {
-        let transporter = nodemailer.createTransport({
-            host: "smtp.trash-mail.com",
-            auth: {
-                user: 'logisticBroker@opentrash.com', // generated ethereal user
-                pass: '123' // generated ethereal password
-            }
-        }); // send mail with defined transport object
-        let info = {
-            from: '"Fred Foo 👻" <foo@example.com>', // sender address
-            to: "kir221dol@gmail.com", // list of receivers
-            subject: "Hello ✔", // Subject line
-            text: "Hello wor", // plain text body
-        };
-
-        transporter.sendMail(info, function (error, info) {
-            if (error) {
-                console.log(error);
-            } else {
-                res.send('Email sent: ' + info.response);
-            }
-        });
-    }
 }

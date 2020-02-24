@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const userRouter = require('./users/user.router');
 const adminRouter = require('./admin/admin.router');
 const managerRouter = require('./manager/manager.router');
+const driverRouter = require('./driver/driver.router');
 const seq = require('./database/dbmysql');
 
 app.use(bodyParser.urlencoded({
@@ -13,7 +14,7 @@ app.use(bodyParser.urlencoded({
 
 app.use(bodyParser.json());
 
-app.use('/api', userRouter, adminRouter, managerRouter);
+app.use('/api', userRouter, adminRouter, managerRouter, driverRouter);
 
 
 app.use((error, req, res, next) => {
