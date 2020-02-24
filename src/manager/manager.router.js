@@ -7,7 +7,7 @@ const {
 const router = require("express").Router();
 //const verifyInfo = require('../verifyInfo');
 
-router.get('/manager/getOrders', getOrders);
+router.get('/manager/getOrders',  getOrders);
 
 router.post('/manager/getOrderInfo', getOrderInfo);
 

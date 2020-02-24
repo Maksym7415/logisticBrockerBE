@@ -13,7 +13,10 @@ decryptInfo = (info) => {
 }
 
 module.exports = {
-
+    check: async (req, res, next) => {
+        const hash = bcrypt.hashSync('ee', 8)
+        res.send(hash);
+    },
     addUser: async (req, res, next) => {
         let {login, password, role} = req.body
         let user = await userTable.findAll({where: {[Op.or]: [

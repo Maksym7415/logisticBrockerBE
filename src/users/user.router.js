@@ -2,9 +2,11 @@ const {
     getUser,
     authorization,
     addUser
+
 } = require('./user.controller');
 const router = require("express").Router();
 const verifyInfo = require('../verifyInfo');
+
 
 router.get('/user/getUser', getUser);
 
