@@ -7,6 +7,9 @@ const adminRouter = require('./admin/admin.router');
 const managerRouter = require('./manager/manager.router');
 const driverRouter = require('./driver/driver.router');
 const seq = require('./database/dbmysql');
+var cors = require('cors');
+
+app.use(cors())
 
 app.use(bodyParser.urlencoded({
     extended: true
