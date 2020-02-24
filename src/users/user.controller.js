@@ -53,9 +53,9 @@ module.exports = {
             });
             
             if(user && bcrypt.compareSync(password, user.password)){
-                let token = jwt.sign({
+                let token = jwt.sign({sub: {
                     id_user: user.id_user,
-                    role: user.role,},
+                    role: user.role}},
                     'secretKey'
                 );
     
