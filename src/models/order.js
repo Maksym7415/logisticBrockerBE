@@ -23,6 +23,10 @@ orderTable = seq.define('order', {
         type: Sequelize.STRING(100),
         allowNull: false,
     },
+    price:{
+        type: Sequelize.FLOAT(7,2),
+        allowNull:false,
+    },
     air_miles:{
         type: Sequelize.INTEGER(11),
         allowNull:false,
@@ -47,6 +51,11 @@ orderTable = seq.define('order', {
         type: Sequelize.INTEGER(11),
         allowNull: false,
     },
+    pieces:{
+        type: Sequelize.INTEGER(11),
+        allowNull:false,
+        defaultValue:1,
+    }
 });
 
 orderTable.hasMany(stakeTable, { foreignKey: {name:'fk_order', allowNull:false}, foreignKeyConstraint: true });

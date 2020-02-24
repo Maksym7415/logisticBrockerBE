@@ -42,6 +42,7 @@ module.exports = {
                     await seq.models.driver.create({
                         name,
                         phone: req.body.phone,
+                        price: req.body.price,
                         fk_user: query.id_user,
                         fk_vehicle: req.body.vehicle,
                     });

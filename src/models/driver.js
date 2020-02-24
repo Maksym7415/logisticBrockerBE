@@ -22,6 +22,10 @@ driverTable = seq.define('driver', {
         allowNull: false,
         defaultValue: 'Not Available',
     },
+    price:{
+        type: Sequelize.FLOAT(4,2),
+        allowNull:false,
+    },
     phone:{
         type: Sequelize.STRING(15),
         allowNull:false
