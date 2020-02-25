@@ -1,5 +1,6 @@
 const createError = require('http-errors');
 const seq = require('../database/dbmysql');
+const photoTable = require('../models/photo');
 
 module.exports = {
     getDriver: async (req, res) => {

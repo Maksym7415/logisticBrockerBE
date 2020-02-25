@@ -10,64 +10,6 @@ const {
 
 
 module.exports = {
-    /*addUser: async (req, res, next) => {
-        let {
-            login,
-            password,
-            role,
-            name,
-            email,
-        } = req.body
-        //проверка на то есть ли такой логин или почта в системе
-        let user = await userTable.findAll({
-            where: {
-                [Op.or]: [{
-                        login: login,
-                    },
-                    {
-                        email: email || null,
-                    }
-                ]
-            }
-        });
-        if (user.length === 0) {
-            try {
-                const hash = bcrypt.hashSync(password, 8)
-                let query = await userTable.create({
-                    login,
-                    password: hash,
-                    role,
-                    email: email || null,
-                }); 
-                if (role == "driver") {
-                    await seq.models.driver.create({
-                        name,
-                        phone: req.body.phone,
-                        price: req.body.price,
-                        fk_user: query.id_user,
-                        fk_vehicle: req.body.vehicle,
-                    });
-                } else if (role == "admin") {
-                    await seq.models.admin.create({
-                        name,
-                        fk_user: query.id_user,
-                    });
-                } else if (role == "manager") {
-                    await seq.models.manager.create({
-                        name,
-                        fk_user: query.id_user,
-                    });
-                }
-                res.json(query);
-
-            } catch (e) {
-                next(createError(500, e));
-            }
-        }
-        else{
-            res.send(user);
-        }
-    },*/
     addUser: async (req, res, next) => {
         let {
             login,
@@ -88,7 +30,7 @@ module.exports = {
         });
         let phoneCheck = await seq.models.driver.count({
             where: {
-                phone: req.body.phone
+                phone: req.body.phone||null,
             }
         });
         if (!loginCheck && !emailCheck && !phoneCheck) {
@@ -119,24 +61,21 @@ module.exports = {
                         fk_user: query.id_user,
                     });
                 }
-                res.json(loginCheck, emailCheck, phoneCheck);
+                res.send("Good");
 
-            } catch (e) {
-                res.send(e);
+            } catch (error) {
+                next(createError(400, error))
             }
         }
         else{
-            res.send("Bad");
+            next(createError(400, 'Duplicate values', {stack:{Login: !!loginCheck, Email: !!emailCheck, Phone: !!phoneCheck}}));
         }
     },
-
-
 
     getUser: async (req, res) => {
         const promise = await userTable.findAll();
         res.send(promise);
     },
-
 
     authorization: async (req, res, next) => {
         try {
