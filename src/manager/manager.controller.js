@@ -56,7 +56,7 @@ module.exports = {
         }
     },
     getStakes: async(req, res) => {
-        const promise = await seq.models.broker.findAll({
+        /*const promise = await seq.models.broker.findAll({
             attributes:['id_broker', 'name'],
             include:{
                 model:seq.models.order,
@@ -71,9 +71,12 @@ module.exports = {
                     }
                 }
             }
-        })
+        })*/
         //наилучший вариант 
-        //const promise = await seq.query('select * from `stakes`,`orders` where `fk_order` = `id_order`', {type: QueryTypes.SELECT});
+        const promise = await seq.query('select `created`, `brokers`.`name` as `brokerage`, `pickup`, `deliver`, `air_miles`,'+
+        ' `earth_miles`,`driver_price`, `broker_price`, `managers`.`name` as `dispatcher` from `stakes`,`orders`,`brokers`,`managers`'+
+        ' where `fk_order` = `id_order` and `fk_manager` = `id_manager` and `fk_broker` = `id_broker`', 
+        {type: QueryTypes.SELECT});
         res.send(promise);
     }
 }

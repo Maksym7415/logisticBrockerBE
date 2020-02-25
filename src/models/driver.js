@@ -44,7 +44,8 @@ driverTable.belongsTo(userTable, { foreignKey: {name:'fk_user', allowNull:false}
 
 driverTable.belongsTo(vehicleTable, { foreignKey: {name:'fk_vehicle', allowNull:false}, foreignKeyConstraint: true });
 
-driverTable.belongsToMany(orderTable,{through:'stake', as: 'orders', foreignKey:'fk_driver', otherKey:'fk_order'});
-orderTable.belongsToMany(driverTable,{through:'stake', as: 'drivers', foreignKey:'fk_order', otherKey:'fk_driver'});
+driverTable.hasMany(stakeTable, { foreignKey: {name:'fk_driver', allowNull:false}, foreignKeyConstraint: true });
+//driverTable.belongsToMany(orderTable,{through:'stake', as: 'orders', foreignKey:'fk_driver', otherKey:'fk_order'});
+//orderTable.belongsToMany(driverTable,{through:'stake', as: 'drivers', foreignKey:'fk_order', otherKey:'fk_driver'});
 
 module.exports = driverTable;

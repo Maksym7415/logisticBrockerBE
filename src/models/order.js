@@ -19,9 +19,25 @@ orderTable = seq.define('order', {
         type: Sequelize.STRING(100),
         allowNull: false,
     },
+    pickup_longitude:{
+        type: Sequelize.STRING(100),
+        allowNull:true,
+    },
+    pickup_latitude:{
+        type: Sequelize.STRING(100),
+        allowNull: true,
+    },
     deliver:{
         type: Sequelize.STRING(100),
         allowNull: false,
+    },
+    deliver_longitude:{
+        type: Sequelize.STRING(100),
+        allowNull:true,
+    },
+    deliver_latitude:{
+        type: Sequelize.STRING(100),
+        allowNull: true,
     },
     price:{
         type: Sequelize.FLOAT(7,2),
@@ -58,10 +74,10 @@ orderTable = seq.define('order', {
     }
 });
 
+
+//managerTable.belongsToMany(orderTable,{through:'stake', as: 'orders', foreignKey:'fk_manager', otherKey:'fk_order'});
+//orderTable.belongsToMany(managerTable,{through:'stake', as: 'managers', foreignKey:'fk_order', otherKey:'fk_manager'});
+
 orderTable.hasMany(stakeTable, { foreignKey: {name:'fk_order', allowNull:false}, foreignKeyConstraint: true });
-
-managerTable.belongsToMany(orderTable,{through:'stake', as: 'orders', foreignKey:'fk_manager', otherKey:'fk_order'});
-orderTable.belongsToMany(managerTable,{through:'stake', as: 'managers', foreignKey:'fk_order', otherKey:'fk_manager'});
-
 
 module.exports = orderTable;

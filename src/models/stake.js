@@ -37,7 +37,16 @@ stakeTable = seq.define('stake', {
     fk_order:{
         type: Sequelize.INTEGER(11),
         allowNull: false,
+    },
+    fk_manager:{
+        type: Sequelize.INTEGER(11),
+        allowNull: false,
     }
+},{
+    indexes:[{
+        unique:true,
+        fields:['fk_driver', 'fk_order', 'fk_manager']
+    }]
 });
 
 module.exports = stakeTable;
