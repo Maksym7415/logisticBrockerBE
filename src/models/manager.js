@@ -4,7 +4,7 @@ const userTable = require('./user');
 const stakeTable = require('./stake');
 
 managerTable = seq.define('manager', {
-    id_manager: {
+    id: {
         type: Sequelize.INTEGER(11),
         allowNull: false,
         autoIncrement: true,
@@ -16,8 +16,8 @@ managerTable = seq.define('manager', {
     },
 });
 
-managerTable.belongsTo(userTable, { foreignKey: {name:'fk_user', allowNull:false}, foreignKeyConstraint: true });
-managerTable.hasMany(stakeTable, { foreignKey: {name:'fk_manager', allowNull:false}, foreignKeyConstraint: true });
-stakeTable.belongsTo(managerTable, { foreignKey: {name:'fk_manager', allowNull:false}, foreignKeyConstraint: true })
+managerTable.belongsTo(userTable, { foreignKey: {name:'user_id', allowNull:false}, foreignKeyConstraint: true });
+managerTable.hasMany(stakeTable, { foreignKey: {name:'manager_id', allowNull:false}, foreignKeyConstraint: true });
+stakeTable.belongsTo(managerTable, { foreignKey: {name:'manager_id', allowNull:false}, foreignKeyConstraint: true })
 
 module.exports = managerTable;

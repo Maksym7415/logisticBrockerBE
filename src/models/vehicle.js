@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 const seq = require('../database/dbmysql');
 
 vehicleTable = seq.define('vehicle', {
-    id_vehicle: {
+    id: {
         type: Sequelize.INTEGER(11),
         allowNull: false,
         autoIncrement: true,

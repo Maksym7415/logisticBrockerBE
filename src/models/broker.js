@@ -3,7 +3,7 @@ const seq = require('../database/dbmysql');
 const orderTable = require('./order');
 
 brokerTable = seq.define('broker', {
-    id_broker: {
+    id: {
         type: Sequelize.INTEGER(11),
         allowNull: false,
         autoIncrement: true,
@@ -27,7 +27,7 @@ brokerTable = seq.define('broker', {
     }
 });
 
-brokerTable.hasMany(orderTable, { foreignKey: {name:'fk_broker', allowNull:false}, foreignKeyConstraint: true });
-orderTable.belongsTo(brokerTable, { foreignKey: {name:'fk_broker', allowNull:false}, foreignKeyConstraint: true });
+brokerTable.hasMany(orderTable, { foreignKey: {name:'broker_id', allowNull:false}, foreignKeyConstraint: true });
+orderTable.belongsTo(brokerTable, { foreignKey: {name:'broker_id', allowNull:false}, foreignKeyConstraint: true });
 
 module.exports = brokerTable;

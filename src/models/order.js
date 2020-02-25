@@ -1,10 +1,9 @@
 const Sequelize = require('sequelize');
 const seq = require('../database/dbmysql');
 const stakeTable = require('../models/stake');
-const managerTable = require('./manager');
 
 orderTable = seq.define('order', {
-    id_order: {
+    id: {
         type: Sequelize.INTEGER(11),
         allowNull: false,
         autoIncrement: true,
@@ -74,7 +73,7 @@ orderTable = seq.define('order', {
     }
 });
 
-orderTable.hasMany(stakeTable, { foreignKey: {name:'fk_order', allowNull:false}, foreignKeyConstraint: true });
-stakeTable.belongsTo(orderTable, { foreignKey: {name:'fk_order', allowNull:false}, foreignKeyConstraint: true });
+orderTable.hasMany(stakeTable, { foreignKey: {name:'order_id', allowNull:false}, foreignKeyConstraint: true });
+stakeTable.belongsTo(orderTable, { foreignKey: {name:'order_id', allowNull:false}, foreignKeyConstraint: true });
 
 module.exports = orderTable;

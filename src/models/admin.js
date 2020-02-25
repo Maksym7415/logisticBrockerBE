@@ -4,7 +4,7 @@ const userTable = require('./user');
 
 
 adminTable = seq.define('admin', {
-    id_admin: {
+    id: {
         type: Sequelize.INTEGER(11),
         allowNull: false,
         autoIncrement: true,
@@ -16,6 +16,6 @@ adminTable = seq.define('admin', {
     },
 });
 
-adminTable.belongsTo(userTable, { foreignKey: {name:'fk_user', allowNull:false}, foreignKeyConstraint: true });
+adminTable.belongsTo(userTable, { foreignKey: {name:'user_id', allowNull:false}, foreignKeyConstraint: true });
 
 module.exports = adminTable;

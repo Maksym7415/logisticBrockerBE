@@ -7,7 +7,7 @@ const stakeTable = require('./stake');
 
 
 driverTable = seq.define('driver', {
-    id_driver: {
+    id: {
         type: Sequelize.INTEGER(11),
         allowNull: false,
         autoIncrement: true,
@@ -41,8 +41,8 @@ driverTable = seq.define('driver', {
     }
 });
 
-driverTable.belongsTo(userTable, { foreignKey: {name:'fk_user', allowNull:false}, foreignKeyConstraint: true });
-driverTable.belongsTo(vehicleTable, { foreignKey: {name:'fk_vehicle', allowNull:false}, foreignKeyConstraint: true });
-driverTable.hasMany(stakeTable, { foreignKey: {name:'fk_driver', allowNull:false}, foreignKeyConstraint: true });
+driverTable.belongsTo(userTable, { foreignKey: {name:'user_id', allowNull:false}, foreignKeyConstraint: true });
+driverTable.belongsTo(vehicleTable, { foreignKey: {name:'vehicle_id', allowNull:false}, foreignKeyConstraint: true });
+driverTable.hasMany(stakeTable, { foreignKey: {name:'driver_id', allowNull:false}, foreignKeyConstraint: true });
 
 module.exports = driverTable;

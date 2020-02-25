@@ -1,6 +1,5 @@
 const createError = require('http-errors');
 const seq = require('../database/dbmysql');
-const photoTable = require('../models/photo');
 
 module.exports = {
     getDriver: async (req, res) => {
@@ -8,19 +7,16 @@ module.exports = {
             const promise = await seq.models.driver.findOne({
                 include: {
                     model: seq.models.stake,
-                    attributes: ['driver_price', 'status'],
+                    required: false,
                     where: {
                         status: 'Accepted',
                     },
                     include: {
                         model: seq.models.order,
-                        attributes: {
-                            exclude: ['fk_broker', 'price']
-                        },
                     }
                 },
                 where: {
-                    id_driver: req.body.id,
+                    user_id: req.body.id,
                 },
             })
             res.send(promise);
@@ -29,18 +25,32 @@ module.exports = {
         }
     },
     changeDriverStatus: async (req, res, next) => {
-        console.log("aa");
         try {
-            const promise = await seq.models.driver.update({
+            await seq.models.driver.update({
                 status: req.body.status
             }, {
                 where: {
-                    id_driver: req.body.id,
+                    id: req.body.id,
                 }
             });
             res.send(req.body.status);
         } catch (error) {
-            console.log(error);
+            next(createError(400, 'Wrong status', {stack:error}));
         }
     },
+    changeDriverGeocoords: async (req, res, next) => {
+        try{
+            const promise = await seq.models.driver.update({
+                longitude: req.body.longitude,
+                latitude: req.body.latitude
+            }, {
+                where: {
+                    id: req.body.id,
+                }
+            });
+            res.send('OK');
+        } catch(error){
+            next(createError(400, 'Wrong coordinates', {stack:error}));
+        }
+    }
 }

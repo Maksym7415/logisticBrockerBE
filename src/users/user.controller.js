@@ -1,13 +1,7 @@
 const createError = require('http-errors');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const userTable = require('../models/user');
 const seq = require('../database/dbmysql');
-const saltRounds = 10;
-const {
-    Op
-} = require('sequelize')
-
 
 module.exports = {
     addUser: async (req, res, next) => {
@@ -36,7 +30,7 @@ module.exports = {
         if (!loginCheck && !emailCheck && !phoneCheck) {
             try {
                 const hash = bcrypt.hashSync(password, 8)
-                let query = await userTable.create({
+                let query = await seq.models.user.create({
                     login,
                     password: hash,
                     role,
@@ -47,18 +41,18 @@ module.exports = {
                         name,
                         phone: req.body.phone,
                         price: req.body.price,
-                        fk_user: query.id_user,
-                        fk_vehicle: req.body.vehicle,
+                        user_id: query.id_user,
+                        vehicle_id: req.body.vehicle,
                     });
                 } else if (role == "admin") {
                     await seq.models.admin.create({
                         name,
-                        fk_user: query.id_user,
+                        user_id: query.id_user,
                     });
                 } else if (role == "manager") {
                     await seq.models.manager.create({
                         name,
-                        fk_user: query.id_user,
+                        user_id: query.id_user,
                     });
                 }
                 res.send("Good");
