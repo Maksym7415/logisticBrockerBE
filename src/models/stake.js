@@ -45,8 +45,9 @@ stakeTable = seq.define('stake', {
 },{
     indexes:[{
         unique:true,
-        fields:['fk_driver', 'fk_order', 'fk_manager']
+        fields:['fk_order', 'fk_driver', 'fk_manager'],
     }]
-});
+}
+);
 
 module.exports = stakeTable;

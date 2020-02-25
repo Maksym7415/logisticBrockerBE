@@ -18,5 +18,6 @@ managerTable = seq.define('manager', {
 
 managerTable.belongsTo(userTable, { foreignKey: {name:'fk_user', allowNull:false}, foreignKeyConstraint: true });
 managerTable.hasMany(stakeTable, { foreignKey: {name:'fk_manager', allowNull:false}, foreignKeyConstraint: true });
+stakeTable.belongsTo(managerTable, { foreignKey: {name:'fk_manager', allowNull:false}, foreignKeyConstraint: true })
 
 module.exports = managerTable;

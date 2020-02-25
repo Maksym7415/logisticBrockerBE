@@ -74,10 +74,7 @@ orderTable = seq.define('order', {
     }
 });
 
-
-//managerTable.belongsToMany(orderTable,{through:'stake', as: 'orders', foreignKey:'fk_manager', otherKey:'fk_order'});
-//orderTable.belongsToMany(managerTable,{through:'stake', as: 'managers', foreignKey:'fk_order', otherKey:'fk_manager'});
-
 orderTable.hasMany(stakeTable, { foreignKey: {name:'fk_order', allowNull:false}, foreignKeyConstraint: true });
+stakeTable.belongsTo(orderTable, { foreignKey: {name:'fk_order', allowNull:false}, foreignKeyConstraint: true });
 
 module.exports = orderTable;

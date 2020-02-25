@@ -10,35 +10,36 @@ const {
 
 
 module.exports = {
-    check: async (req, res, next) => {
-        const hash = bcrypt.hashSync('ee', 8)
-        res.send(hash);
-    },
-    addUser: async (req, res, next) => {
+    /*addUser: async (req, res, next) => {
         let {
             login,
             password,
             role,
             name,
+            email,
         } = req.body
+        //проверка на то есть ли такой логин или почта в системе
         let user = await userTable.findAll({
             where: {
                 [Op.or]: [{
-                    login: login
-                }, ]
+                        login: login,
+                    },
+                    {
+                        email: email || null,
+                    }
+                ]
             }
-        })
+        });
         if (user.length === 0) {
             try {
                 const hash = bcrypt.hashSync(password, 8)
                 let query = await userTable.create({
                     login,
-                    password: bcrypt.hashSync(password, 8),
+                    password: hash,
                     role,
-                    email: req.body.email||null,
-                }); // writing new user in database
-                // fsdfsd
-                if(role == "driver"){
+                    email: email || null,
+                }); 
+                if (role == "driver") {
                     await seq.models.driver.create({
                         name,
                         phone: req.body.phone,
@@ -46,25 +47,90 @@ module.exports = {
                         fk_user: query.id_user,
                         fk_vehicle: req.body.vehicle,
                     });
-                }
-                else if(role == "admin"){
+                } else if (role == "admin") {
                     await seq.models.admin.create({
-                        name, 
+                        name,
                         fk_user: query.id_user,
                     });
-                }
-                else if(role == "manager"){
+                } else if (role == "manager") {
                     await seq.models.manager.create({
                         name,
                         fk_user: query.id_user,
                     });
                 }
-                res.json(query)
+                res.json(query);
+
             } catch (e) {
-                next(createError(500, e))
+                next(createError(500, e));
             }
         }
+        else{
+            res.send(user);
+        }
+    },*/
+    addUser: async (req, res, next) => {
+        let {
+            login,
+            password,
+            role,
+            name,
+            email,
+        } = req.body;
+        let loginCheck = await seq.models.user.count({
+            where: {
+                login: login
+            }
+        });
+        let emailCheck = await seq.models.user.count({
+            where: {
+                email: email
+            }
+        });
+        let phoneCheck = await seq.models.driver.count({
+            where: {
+                phone: req.body.phone
+            }
+        });
+        if (!loginCheck && !emailCheck && !phoneCheck) {
+            try {
+                const hash = bcrypt.hashSync(password, 8)
+                let query = await userTable.create({
+                    login,
+                    password: hash,
+                    role,
+                    email: email || null,
+                });
+                if (role == "driver") {
+                    await seq.models.driver.create({
+                        name,
+                        phone: req.body.phone,
+                        price: req.body.price,
+                        fk_user: query.id_user,
+                        fk_vehicle: req.body.vehicle,
+                    });
+                } else if (role == "admin") {
+                    await seq.models.admin.create({
+                        name,
+                        fk_user: query.id_user,
+                    });
+                } else if (role == "manager") {
+                    await seq.models.manager.create({
+                        name,
+                        fk_user: query.id_user,
+                    });
+                }
+                res.json(loginCheck, emailCheck, phoneCheck);
+
+            } catch (e) {
+                res.send(e);
+            }
+        }
+        else{
+            res.send("Bad");
+        }
     },
+
+
 
     getUser: async (req, res) => {
         const promise = await userTable.findAll();

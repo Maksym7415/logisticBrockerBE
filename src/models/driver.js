@@ -28,7 +28,8 @@ driverTable = seq.define('driver', {
     },
     phone:{
         type: Sequelize.STRING(15),
-        allowNull:false
+        allowNull:false,
+        unique: true,
     },
     longitude:{
         type: Sequelize.STRING(100),
@@ -41,11 +42,7 @@ driverTable = seq.define('driver', {
 });
 
 driverTable.belongsTo(userTable, { foreignKey: {name:'fk_user', allowNull:false}, foreignKeyConstraint: true });
-
 driverTable.belongsTo(vehicleTable, { foreignKey: {name:'fk_vehicle', allowNull:false}, foreignKeyConstraint: true });
-
 driverTable.hasMany(stakeTable, { foreignKey: {name:'fk_driver', allowNull:false}, foreignKeyConstraint: true });
-//driverTable.belongsToMany(orderTable,{through:'stake', as: 'orders', foreignKey:'fk_driver', otherKey:'fk_order'});
-//orderTable.belongsToMany(driverTable,{through:'stake', as: 'drivers', foreignKey:'fk_order', otherKey:'fk_driver'});
 
 module.exports = driverTable;

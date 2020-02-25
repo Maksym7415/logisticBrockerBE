@@ -6,21 +6,22 @@ module.exports = {
         try {
             const promise = await seq.models.driver.findOne({
                 include: {
-                    model: seq.models.order,
-                    as: "orders",
-                    attributes:{exclude:['fk_broker', 'price']},
-                    through: {
-                        model: seq.models.stake,
-                        attributes:['driver_price', 'status'],
-                        where: {
-                            status: 'Accepted',
-                        }
+                    model: seq.models.stake,
+                    attributes: ['driver_price', 'status'],
+                    where: {
+                        status: 'Accepted',
+                    },
+                    include: {
+                        model: seq.models.order,
+                        attributes: {
+                            exclude: ['fk_broker', 'price']
+                        },
                     }
                 },
                 where: {
                     id_driver: req.body.id,
-                }
-            });
+                },
+            })
             res.send(promise);
         } catch (error) {
             console.log(error);
@@ -40,5 +41,5 @@ module.exports = {
         } catch (error) {
             console.log(error);
         }
-    }
+    },
 }

@@ -28,5 +28,6 @@ brokerTable = seq.define('broker', {
 });
 
 brokerTable.hasMany(orderTable, { foreignKey: {name:'fk_broker', allowNull:false}, foreignKeyConstraint: true });
+orderTable.belongsTo(brokerTable, { foreignKey: {name:'fk_broker', allowNull:false}, foreignKeyConstraint: true });
 
 module.exports = brokerTable;
