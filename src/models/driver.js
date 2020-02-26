@@ -44,5 +44,6 @@ driverTable = seq.define('driver', {
 driverTable.belongsTo(userTable, { foreignKey: {name:'user_id', allowNull:false}, foreignKeyConstraint: true });
 driverTable.belongsTo(vehicleTable, { foreignKey: {name:'vehicle_id', allowNull:false}, foreignKeyConstraint: true });
 driverTable.hasMany(stakeTable, { foreignKey: {name:'driver_id', allowNull:false}, foreignKeyConstraint: true });
+stakeTable.belongsTo(driverTable, { foreignKey: {name:'driver_id', allowNull:false}, foreignKeyConstraint: true });
 
 module.exports = driverTable;
