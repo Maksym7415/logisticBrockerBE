@@ -1,4 +1,5 @@
 const express = require('express');
+const bearerToken = require('express-bearer-token');
 const app = express();
 require('dotenv').config();
 const bodyParser = require('body-parser');
@@ -10,7 +11,9 @@ const seq = require('./database/dbmysql');
 var cors = require('cors');
 const connection = require('./database/connection');
 
-app.use(cors())
+app.use(cors());
+
+app.use(bearerToken());
 
 app.use(bodyParser.urlencoded({
     extended: true
