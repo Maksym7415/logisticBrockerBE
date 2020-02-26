@@ -42,18 +42,18 @@ module.exports = {
                         name,
                         phone: req.body.phone,
                         price: req.body.price,
-                        user_id: query.id_user,
+                        user_id: query.id,
                         vehicle_id: req.body.vehicle,
                     });
                 } else if (role == "admin") {
                     await seq.models.admin.create({
                         name,
-                        user_id: query.id_user,
+                        user_id: query.id,
                     });
                 } else if (role == "manager") {
                     await seq.models.manager.create({
                         name,
-                        user_id: query.id_user,
+                        user_id: query.id,
                     });
                 }
                 res.send("Good");

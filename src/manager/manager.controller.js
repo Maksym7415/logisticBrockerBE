@@ -58,9 +58,12 @@ module.exports = {
                         model: seq.models.broker,
                         attributes:['id', 'name'],
                     }
+                },
+                {
+                    model:seq.models.driver,
                 }
             ],
-            attributes:['created', 'driver_price', 'broker_price', 'percent', 'status'],
+            attributes:['id','created', 'driver_price', 'broker_price', 'percent', 'status'],
         });
         res.send(promise);
     },
@@ -86,4 +89,62 @@ module.exports = {
             console.log(error);
         }
     },
+    getProfile: async (req, res, next) => {
+        try{
+            const role = await seq.models.user.findOne({
+                where:{
+                    id: req.body.id,
+                }
+            });
+            if(role){
+                if(role.role === 'admin'){
+                    promise = await seq.models.admin.findOne({
+                        where:{
+                            user_id: req.body.id,
+                        },
+                        include:{
+                            model: seq.models.user,
+                        }
+                    });
+                    res.send(promise);
+                }
+                else if(role.role === 'manager'){
+                    promise = await seq.models.manager.findOne({
+                        where:{
+                            user_id: req.body.id,
+                        },
+                        include:{
+                            model: seq.models.user,
+                        }
+                    });
+                    res.send(promise);
+                }
+                else{
+                    next(createError(400, 'Wrong user id'));
+                }
+            }
+            else{
+                next(createError(400, 'This user does not exists'));
+            }
+        }
+        catch(error){
+            next(createError(400, error));
+        }
+    },
+    placeBid: async(req, res, next) => {
+        try{
+            await seq.models.stake.create({
+                driver_price: req.body.driver_price,
+                broker_price: req.body.broker_price,
+                percent: req.body.percent,
+                driver_id: req.body.driver_id,
+                order_id: req.body.order_id,
+                manager_id: req.body.manager_id,
+            });
+            res.send('OK');
+        }
+        catch(error){
+            next(createError(400, error));
+        }
+    }
 }
