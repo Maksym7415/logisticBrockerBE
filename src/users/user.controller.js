@@ -67,7 +67,7 @@ module.exports = {
     },
 
     getUser: async (req, res) => {
-        const promise = await userTable.findAll();
+        const promise = await seq.models.user.findAll();
         res.send(promise);
     },
 
@@ -77,7 +77,7 @@ module.exports = {
                 login,
                 password
             } = req.body;
-            let user = await userTable.findOne({
+            let user = await seq.models.user.findOne({
                 where: {
                     login: login
                 }
