@@ -1,4 +1,5 @@
 const createError = require('http-errors');
+const uuidv1 = require('uuidv1')
 const seq = require('../database/dbmysql');
 const photoTable = require('../models/photo');
 
@@ -9,9 +10,9 @@ module.exports = {
                 include: {
                     model: seq.models.stake,
                     attributes: ['driver_price', 'status'],
-                    where: {
-                        status: 'Accepted',
-                    },
+                    // where: {
+                    //     status: 'Accepted',
+                    // },
                     include: {
                         model: seq.models.order,
                         attributes: {
@@ -43,4 +44,13 @@ module.exports = {
             console.log(error);
         }
     },
+    addPhoto:  (req, res, next) => {
+        const { orderId } = req.body;
+        try {
+          req.files.map(async (el) => await photoTable.create({ name: el.filename, id_photo: uuidv1(), fk_order: orderId }));
+          res.status(200).json({ message: 'Ok' });
+        } catch (err) {
+          res.status(400).json({ message: 'error' });
+        }
+      },
 }

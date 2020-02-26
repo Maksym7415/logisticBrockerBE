@@ -4,9 +4,8 @@ const orderTable = require('./order');
 
 photoTable = seq.define('photo', {
     id_photo: {
-        type: Sequelize.INTEGER(11),
+        type: Sequelize.STRING(100),
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
     },
     name: {
@@ -18,4 +17,4 @@ photoTable = seq.define('photo', {
 photoTable.belongsTo(orderTable, { foreignKey: {name:'fk_order', allowNull:false}, foreignKeyConstraint: true });
 orderTable.hasMany(photoTable, { foreignKey: {name:'fk_order', allowNull:false}, foreignKeyConstraint: true });
 
-module.exports = adminTable;
+module.exports = photoTable;
