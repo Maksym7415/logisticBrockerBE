@@ -8,6 +8,7 @@ const managerRouter = require('./manager/manager.router');
 const driverRouter = require('./driver/driver.router');
 const seq = require('./database/dbmysql');
 var cors = require('cors');
+const connection = require('./database/connection');
 
 app.use(cors())
 

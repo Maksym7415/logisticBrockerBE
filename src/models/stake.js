@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 const seq = require('../database/dbmysql');
 
 stakeTable = seq.define('stake', {
-    id_stake: {
+    id: {
         type: Sequelize.INTEGER(11),
         allowNull: false,
         autoIncrement: true,
@@ -30,22 +30,10 @@ stakeTable = seq.define('stake', {
         allowNull:false,
         defaultValue:"Pending",
     },
-    fk_driver:{
-        type: Sequelize.INTEGER(11),
-        allowNull: false,
-    },
-    fk_order:{
-        type: Sequelize.INTEGER(11),
-        allowNull: false,
-    },
-    fk_manager:{
-        type: Sequelize.INTEGER(11),
-        allowNull: false,
-    }
 },{
     indexes:[{
         unique:true,
-        fields:['fk_order', 'fk_driver', 'fk_manager'],
+        fields:['order_id', 'driver_id', 'manager_id'],
     }]
 }
 );

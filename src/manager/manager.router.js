@@ -2,7 +2,8 @@ const {
     getOrders,
     getOrderInfo,
     getDrivers,
-    getStakes
+    getStakes,
+    getDriver
 } = require('./manager.controller');
 const router = require("express").Router();
 //const verifyInfo = require('../verifyInfo');
@@ -14,5 +15,7 @@ router.post('/manager/getOrderInfo', getOrderInfo);
 router.get('/manager/getDrivers', getDrivers);
 
 router.get('/manager/getStakes', getStakes);
+
+router.post('/manager/getDriver', getDriver);
 
 module.exports = router;

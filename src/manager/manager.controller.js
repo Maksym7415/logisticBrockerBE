@@ -1,9 +1,5 @@
 const createError = require('http-errors');
 const seq = require('../database/dbmysql');
-const brokerTable = require('../models/broker');
-const driverTable = require('../models/driver');
-const vehicleTable = require('../models/vehicle');
-const managerTable = require('../models/manager');
 const nodemailer = require('nodemailer');
 
 module.exports = {
@@ -12,9 +8,9 @@ module.exports = {
             const promise = await seq.models.order.findAll({
                 include:{
                     model:seq.models.broker,
-                    attributes:['id_broker', 'name'],
+                    attributes:['id', 'name'],
                 },
-                attributes:['id_order', 'received', 'pickup', 'deliver', 'air_miles', 'earth_miles'],
+                attributes:['id', 'received', 'pickup', 'deliver', 'air_miles', 'earth_miles'],
             })
             res.json(promise);
         } catch (error) {
@@ -27,9 +23,9 @@ module.exports = {
                 include:{
                     model:seq.models.broker,
                 },
-                attributes:{exclude:['fk_broker']},
+                attributes:{exclude:['broker_id']},
                 where:{
-                    id_order: req.body.order,
+                    id: req.body.order,
                 }
             })
             res.json(promise);
@@ -53,19 +49,41 @@ module.exports = {
         const promise = await seq.models.stake.findAll({
             include: [{
                     model: seq.models.manager,
-                    attributes:{exclude:['fk_user']},
+                    attributes:{exclude:['user_id']},
                 },
                 {
                     model: seq.models.order,
-                    attributes:{exclude:['fk_broker']},
+                    attributes:{exclude:['broker_id']},
                     include: {
                         model: seq.models.broker,
-                        attributes:['id_broker', 'name'],
+                        attributes:['id', 'name'],
                     }
                 }
             ],
             attributes:['created', 'driver_price', 'broker_price', 'percent', 'status'],
         });
         res.send(promise);
-    }
+    },
+    getDriver: async (req, res, next) => {
+        try {
+            const promise = await seq.models.driver.findOne({
+                include: {
+                    model: seq.models.stake,
+                    attributes: ['driver_price', 'status'],
+                    include: {
+                        model: seq.models.order,
+                        attributes: {
+                            exclude: ['broker_id', 'price']
+                        },
+                    }
+                },
+                where: {
+                    user_id: req.body.id,
+                },
+            })
+            res.send(promise);
+        } catch (error) {
+            console.log(error);
+        }
+    },
 }

@@ -3,7 +3,7 @@ const seq = require('../database/dbmysql');
 
 
 module.exports = seq.define('user', {
-    id_user: {
+    id: {
         type: Sequelize.INTEGER(11),
         allowNull: false,
         autoIncrement: true,

@@ -6,7 +6,9 @@ const uuidv1 = require('uuid/v1');
 const {
     getDriver,
     changeDriverStatus,
-    addPhoto
+    addPhoto,
+    changeDriverGeocoords,
+
 } = require('./driver.controller');
 const router = require("express").Router();
 
@@ -27,5 +29,7 @@ const storage = multer.diskStorage({
 router.use('/', express.static(path.join(__dirname, '../../../uploads')));
 const upload = multer({ storage });
 router.post('/upload', upload.array('file', 5), addPhoto);
+
+router.put('/driver/changeDriverGeocoords', changeDriverGeocoords);
 
 module.exports = router;
