@@ -42,8 +42,9 @@ module.exports = {
     },
     addPhoto:  (req, res, next) => {
         const { orderId } = req.body;
+        console.log(orderId)
         try {
-          req.files.map(async (el) => await photoTable.create({ name: el.filename, id_photo: uuidv1(), fk_order: orderId }));
+          req.files.map(async (el) => await photoTable.create({ name: el.filename, id: uuidv1(), order_id: orderId }));
           res.status(200).json({ message: 'Ok' });
         } catch (err) {
           res.status(400).json({ message: 'error' });

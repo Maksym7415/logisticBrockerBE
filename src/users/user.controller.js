@@ -2,6 +2,7 @@ const createError = require('http-errors');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const seq = require('../database/dbmysql');
+const { genSaltSync, hashSync, compareSync } = require('bcrypt');
 
 module.exports = {
     addUser: async (req, res, next) => {
@@ -67,7 +68,7 @@ module.exports = {
     },
 
     getUser: async (req, res) => {
-        const promise = await userTable.findAll();
+        const promise = await seq.models.user.findAll();
         res.send(promise);
     },
 
@@ -77,7 +78,7 @@ module.exports = {
                 login,
                 password
             } = req.body;
-            let user = await userTable.findOne({
+            let user = await seq.models.user.findOne({
                 where: {
                     login: login
                 }
@@ -87,7 +88,7 @@ module.exports = {
             if (user && bcrypt.compareSync(password, user.password)) {
                 let token = jwt.sign({
                         sub: {
-                            id_user: user.id_user,
+                            id_user: user.id,
                             role: user.role
                         }
                     },
