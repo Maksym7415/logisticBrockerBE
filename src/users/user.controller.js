@@ -108,6 +108,7 @@ module.exports = {
     updateUserPassword: async (request, response, next) => {
         const { body } = request;
         const salt = genSaltSync(10);
+        console.log(body)
         try {
           const user = await seq.models.user.findOne({ where: { login: body.login } });
 
@@ -118,7 +119,7 @@ module.exports = {
             body.newPassword = hashSync(body.newPassword, salt);
             await seq.models.user.update({ password: body.newPassword }, {
               where: { login: user.login },
-            }).then((res) => response.json({ status: 200, message: 'Successed password change', stack: res }));
+            }).then((res) => response.status(200).json({ message: 'password successfully changed' }));
           } else next(createError(400, 'old password ist not correct'));
         } catch (err) {
           response.send(err);
