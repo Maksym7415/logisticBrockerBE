@@ -1,7 +1,8 @@
 const {
     getUser,
     authorization,
-    addUser
+    addUser,
+    updateUserPassword
 
 } = require('./user.controller');
 const router = require("express").Router();
@@ -13,5 +14,7 @@ router.get('/user/getUser', getUser);
 router.post('/user/authorization', authorization);
 
 router.post('/user/addUser', addUser);
+
+router.put('/user/updateUserPassword', updateUserPassword);
 
 module.exports = router;
