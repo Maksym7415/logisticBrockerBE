@@ -1,57 +1,67 @@
 const createError = require('http-errors');
 const seq = require('../database/dbmysql');
-const {
-    Op
-} = require("sequelize");
-const nodemailer = require('nodemailer');
+const bcrypt = require('bcrypt');
 
 module.exports = {
-    getOrders: async (req, res, next) => {
-        try {
-            if (req.token.role == 'admin') {
-                const promise = await seq.models.order.findAll();
-                res.send(promise);
-            } else {
-                res.status(400).send('You are not admin');
+    register: async (req, res, next) => {
+        let {
+            login,
+            password,
+            role,
+            name,
+            email,
+        } = req.body;
+        let loginCheck = await seq.models.user.count({
+            where: {
+                login: login
             }
-        } catch (error) {
-            next(createError(400, error))
-        }
-    },
-
-    setOrders: async (req, res, next) => {
-        try {
-            if (req.token.role == 'admin') {
-                const promise = await seq.models.order.create({
-                    description: req.body.description,
-                    status: req.body.status,
-                    price: req.body.price
+        });
+        let emailCheck = await seq.models.user.count({
+            where: {
+                email: email
+            }
+        });
+        let phoneCheck = await seq.models.driver.count({
+            where: {
+                phone: req.body.phone||null,
+            }
+        });
+        if (!loginCheck && !emailCheck && !phoneCheck) {
+            try {
+                const hash = bcrypt.hashSync(password, 8)
+                let query = await seq.models.user.create({
+                    login,
+                    password: hash,
+                    role,
+                    email: email || null,
                 });
-                res.send(promise);
-            } else {
-                res.status(400).send('You are not admin');
-            }
-        } catch (error) {
-            next(createError(400, error));
-        }
-    },
+                if (role == "driver") {
+                    await seq.models.driver.create({
+                        name,
+                        phone: req.body.phone,
+                        price: req.body.price,
+                        user_id: query.id,
+                        vehicle_id: req.body.vehicle,
+                    });
+                } else if (role == "admin") {
+                    await seq.models.admin.create({
+                        name,
+                        user_id: query.id,
+                    });
+                } else if (role == "manager") {
+                    await seq.models.manager.create({
+                        name,
+                        user_id: query.id,
+                    });
+                }
+                res.send("OK");
 
-    filterOrders: async (req, res, next) => {
-        try {
-            if (req.token.role == 'admin') {
-                const promise = await seq.models.order.findAll({
-                    where: {
-                        price: {
-                            [Op.gte]: 500,
-                        }
-                    }
-                })
-                res.send(promise);
-            } else {
-                res.status(400).send('You are not admin');
+            } catch (error) {
+                next(createError(400, error))
             }
-        } catch (error) {
-            next(createError(400, error));
+        }
+        else{
+            next(createError(400, 'Duplicate values', {stack:{Login: !!loginCheck, Email: !!emailCheck, Phone: !!phoneCheck}}));
         }
     },
 }

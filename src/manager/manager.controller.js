@@ -6,11 +6,11 @@ module.exports = {
     getOrders: async (req, res, next) => {
         try {
             const promise = await seq.models.order.findAll({
-                include:{
-                    model:seq.models.broker,
-                    attributes:['id', 'name'],
+                include: {
+                    model: seq.models.broker,
+                    attributes: ['id', 'name'],
                 },
-                attributes:['id', 'received', 'pickup', 'deliver', 'air_miles', 'earth_miles'],
+                attributes: ['id', 'received', 'pickup', 'deliver', 'air_miles', 'earth_miles'],
             })
             res.json(promise);
         } catch (error) {
@@ -20,11 +20,13 @@ module.exports = {
     getOrderInfo: async (req, res, next) => {
         try {
             const promise = await seq.models.order.findOne({
-                include:{
-                    model:seq.models.broker,
+                include: {
+                    model: seq.models.broker,
                 },
-                attributes:{exclude:['broker_id']},
-                where:{
+                attributes: {
+                    exclude: ['broker_id']
+                },
+                where: {
                     id: req.body.order,
                 }
             })
@@ -40,32 +42,40 @@ module.exports = {
                     model: seq.models.vehicle,
                 }
             });
-            res.send(promise);
+            res.json(promise);
         } catch (error) {
             next(createError(400, error));
         }
     },
     getStakes: async (req, res) => {
-        const promise = await seq.models.stake.findAll({
-            include: [{
-                    model: seq.models.manager,
-                    attributes:{exclude:['user_id']},
-                },
-                {
-                    model: seq.models.order,
-                    attributes:{exclude:['broker_id']},
-                    include: {
-                        model: seq.models.broker,
-                        attributes:['id', 'name'],
+        try {
+            const promise = await seq.models.stake.findAll({
+                include: [{
+                        model: seq.models.manager,
+                        attributes: {
+                            exclude: ['user_id']
+                        },
+                    },
+                    {
+                        model: seq.models.order,
+                        attributes: {
+                            exclude: ['broker_id']
+                        },
+                        include: {
+                            model: seq.models.broker,
+                            attributes: ['id', 'name'],
+                        }
+                    },
+                    {
+                        model: seq.models.driver,
                     }
-                },
-                {
-                    model:seq.models.driver,
-                }
-            ],
-            attributes:['id','created', 'driver_price', 'broker_price', 'percent', 'status'],
-        });
-        res.send(promise);
+                ],
+                attributes: ['id', 'created', 'driver_price', 'broker_price', 'percent', 'status'],
+            });
+            res.json(promise);
+        } catch (error) {
+            next(createError(400, error));
+        }
     },
     getDriver: async (req, res, next) => {
         try {
@@ -84,55 +94,51 @@ module.exports = {
                     user_id: req.body.id,
                 },
             })
-            res.send(promise);
+            res.json(promise);
         } catch (error) {
-            console.log(error);
-        }
-    },
-    getProfile: async (req, res, next) => {
-        try{
-            const role = await seq.models.user.findOne({
-                where:{
-                    id: req.body.id,
-                }
-            });
-            if(role){
-                if(role.role === 'admin'){
-                    promise = await seq.models.admin.findOne({
-                        where:{
-                            user_id: req.body.id,
-                        },
-                        include:{
-                            model: seq.models.user,
-                        }
-                    });
-                    res.send(promise);
-                }
-                else if(role.role === 'manager'){
-                    promise = await seq.models.manager.findOne({
-                        where:{
-                            user_id: req.body.id,
-                        },
-                        include:{
-                            model: seq.models.user,
-                        }
-                    });
-                    res.send(promise);
-                }
-                else{
-                    next(createError(400, 'Wrong user id'));
-                }
-            }
-            else{
-                next(createError(400, 'This user does not exists'));
-            }
-        }
-        catch(error){
             next(createError(400, error));
         }
     },
-    placeBid: async(req, res, next) => {
-        try{
+    getProfile: async (req, res, next) => {
+        try {
+            const role = await seq.models.user.findOne({
+                where: {
+                    id: req.body.id,
+                }
+            });
+            if (role) {
+                if (role.role === 'admin') {
+                    promise = await seq.models.admin.findOne({
+                        where: {
+                            user_id: req.body.id,
+                        },
+                        include: {
+                            model: seq.models.user,
+                        }
+                    });
+                    res.json(promise);
+                } else if (role.role === 'manager') {
+                    promise = await seq.models.manager.findOne({
+                        where: {
+                            user_id: req.body.id,
+                        },
+                        include: {
+                            model: seq.models.user,
+                        }
+                    });
+                    res.json(promise);
+                } else {
+                    next(createError(400, 'Wrong user id'));
+                }
+            } else {
+                next(createError(400, 'This user does not exists'));
+            }
+        } catch (error) {
+            next(createError(400, error));
+        }
+    },
+    placeBid: async (req, res, next) => {
+        try {
             await seq.models.stake.create({
                 driver_price: req.body.driver_price,
                 broker_price: req.body.broker_price,
@@ -142,8 +148,7 @@ module.exports = {
                 manager_id: req.body.manager_id,
             });
             res.send('OK');
-        }
-        catch(error){
+        } catch (error) {
             next(createError(400, error));
         }
     }
