@@ -5,7 +5,9 @@ const {
     getStakes,
     getDriver,
     getProfile,
-    placeBid
+    placeBid,
+    changeStakeStatus,
+    sendMail,
 } = require('./manager.controller');
 const seq = require('../database/dbmysql');
 const jwt = require('jsonwebtoken');
@@ -50,5 +52,9 @@ router.post('/manager/getDriver', getDriver);
 router.post('/manager/getProfile', getProfile);
 
 router.post('/manager/placeBid', placeBid);
+
+router.put('/manager/changeStakeStatus', changeStakeStatus);
+
+router.post('/manager/sendMail',sendMail);
 
 module.exports = router;
