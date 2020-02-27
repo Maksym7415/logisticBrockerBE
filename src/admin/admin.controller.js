@@ -11,33 +11,33 @@ module.exports = {
             name,
             email,
         } = req.body;
-        let loginParse = /(?=.*[a-z])(?=.*[0-9])(?=.*[A-Z])[a-z0-9A-Z]{6,}/g.test(login);
-        let passwordParse = /^(?=.*[a-z])(?=.*[0-9])(?=.*[A-Z])[a-z0-9A-Z]{6,8}$/g.test(password);
-        if (!loginParse || !passwordParse) {
-            next(createError(400, 'Invalid values', {
-                stack: {
-                    Login: !loginParse,
-                    Password: !passwordParse,
+        try {
+            let loginParse = /(?=.*[a-z])(?=.*[0-9])(?=.*[A-Z])[a-z0-9A-Z]{6,}/g.test(login);
+            let passwordParse = /^(?=.*[a-z])(?=.*[0-9])(?=.*[A-Z])[a-z0-9A-Z]{6,8}$/g.test(password);
+            if (!loginParse || !passwordParse) {
+                next(createError(400, 'Invalid values', {
+                    stack: {
+                        Login: !loginParse,
+                        Password: !passwordParse,
+                    }
+                }));
+            }
+            let loginCheck = await seq.models.user.count({
+                where: {
+                    login: login
                 }
-            }));
-        }
-        let loginCheck = await seq.models.user.count({
-            where: {
-                login: login
-            }
-        });
-        let emailCheck = await seq.models.user.count({
-            where: {
-                email: email
-            }
-        });
-        let phoneCheck = await seq.models.driver.count({
-            where: {
-                phone: req.body.phone || null,
-            }
-        });
-        if (!loginCheck && !emailCheck && !phoneCheck) {
-            try {
+            });
+            let emailCheck = await seq.models.user.count({
+                where: {
+                    email: email
+                }
+            });
+            let phoneCheck = await seq.models.driver.count({
+                where: {
+                    phone: req.body.phone || null,
+                }
+            });
+            if (!loginCheck && !emailCheck && !phoneCheck) {
                 const hash = bcrypt.hashSync(password, 8)
                 let query = await seq.models.user.create({
                     login,
@@ -65,18 +65,17 @@ module.exports = {
                     });
                 }
                 res.send("OK");
-
-            } catch (error) {
-                next(createError(400, error))
+            } else {
+                next(createError(400, 'Duplicate values', {
+                    stack: {
+                        Login: !!loginCheck,
+                        Email: !!emailCheck,
+                        Phone: !!phoneCheck
+                    }
+                }));
             }
-        } else {
-            next(createError(400, 'Duplicate values', {
-                stack: {
-                    Login: !!loginCheck,
-                    Email: !!emailCheck,
-                    Phone: !!phoneCheck
-                }
-            }));
+        } catch (error) {
+            next(createError(400, error));
         }
     },
 }

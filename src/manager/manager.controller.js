@@ -75,7 +75,11 @@ module.exports = {
                 ],
                 attributes: ['id', 'created', 'driver_price', 'broker_price', 'percent', 'status'],
                 offset: +req.body.offset,
+<<<<<<< HEAD
                 limit:+req.body.limit || 50,
+=======
+                limit: +req.body.limit || 50,
+>>>>>>> 0ec3891f463ab0ab833859619908f4bacc7b4b6d
             });
             res.json(promise);
         } catch (error) {
