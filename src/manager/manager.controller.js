@@ -11,6 +11,8 @@ module.exports = {
                     attributes: ['id', 'name'],
                 },
                 attributes: ['id', 'received', 'pickup', 'deliver', 'air_miles', 'earth_miles'],
+                limit:req.body.limit||50,
+                offset:req.body.offset,
             })
             res.json(promise);
         } catch (error) {
@@ -71,10 +73,27 @@ module.exports = {
                     }
                 ],
                 attributes: ['id', 'created', 'driver_price', 'broker_price', 'percent', 'status'],
+                offset: req.body.offset,
+                limit:req.body.limit || 50,
             });
             res.json(promise);
         } catch (error) {
             next(createError(400, error));
+        }
+    },
+    changeStakeStatus: async (req, res, next) => {
+        try {
+            await seq.models.stake.update({
+                status: req.body.status
+            }, {
+                where: {
+                    id: req.body.id,
+                }
+            });
+            res.send("Status changed to " + req.body.status);
+        } catch (error) {
+            console.log(error);
+            next(createError(400, error.message, {error}));
         }
     },
     getDriver: async (req, res, next) => {
@@ -150,6 +169,40 @@ module.exports = {
             res.send('OK');
         } catch (error) {
             next(createError(400, error));
+        }
+    },
+    sendMail: async (req, res, next) => {
+        try{
+            let {from,to,text,author} = req.body
+            let transporter = nodemailer.createTransport({
+                host: "smtp.gmail.com",
+                auth: {
+                    user: 'telesenstest@gmail.com',
+                    pass: '0000abcd'
+                }
+            });
+            if(!text){
+                text = "Dear Sir or Madam. Please, could you check our bid offer to your order and leave a response. Our thanks and appreciation.";
+            }
+            let info = {
+                from,
+                to,
+                subject: "Bid request",
+                html:`${text}<br/>Transporter LLC<br/>${author.name}<br/>${author.mail}`,
+            };
+    
+            transporter.sendMail(info, (error, info) => {
+                if (error) {
+                    console.log(error);
+                    next(createError(504, error));
+                } else {
+                    console.log('Email sent: ' + info.response);
+                    res.send("Email successfully sent");
+                }
+            });
+        }
+        catch(error){
+            next(createError(400, error.message, {error}));
         }
     }
 }

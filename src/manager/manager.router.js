@@ -5,7 +5,9 @@ const {
     getStakes,
     getDriver,
     getProfile,
-    placeBid
+    placeBid,
+    changeStakeStatus,
+    sendMail,
 } = require('./manager.controller');
 const seq = require('../database/dbmysql');
 const jwt = require('jsonwebtoken');
@@ -37,18 +39,22 @@ router.use('/manager', async (req, res, next) => {
     }
 });
 
-router.get('/manager/getOrders', getOrders);
+router.post('/manager/getOrders', getOrders);
 
 router.post('/manager/getOrderInfo', getOrderInfo);
 
 router.get('/manager/getDrivers', getDrivers);
 
-router.get('/manager/getStakes', getStakes);
+router.post('/manager/getStakes', getStakes);
 
 router.post('/manager/getDriver', getDriver);
 
 router.post('/manager/getProfile', getProfile);
 
 router.post('/manager/placeBid', placeBid);
+
+router.put('/manager/changeStakeStatus', changeStakeStatus);
+
+router.post('/manager/sendMail',sendMail);
 
 module.exports = router;
