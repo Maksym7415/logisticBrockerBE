@@ -10,6 +10,10 @@ const driverRouter = require('./driver/driver.router');
 const seq = require('./database/dbmysql');
 var cors = require('cors');
 const connection = require('./database/connection');
+const fs = require("fs")
+
+let subdomain = 'test'
+let socketPath = `/home/popovmaksim7415/node_hosts/${subdomain}`
 
 app.use(cors());
 
@@ -34,7 +38,8 @@ app.use((error, req, res, next) => {
 });
 
 seq.sync().then(() => {
-    app.listen(port = 8080, () => {
-        console.log(`Listening on port ${port}`);
+    app.listen(socketPath, () => {
+        console.log(`Listening on port ${socketPath}`);
+	fs.chmodSync(socketPath, '777')
     });
 });
