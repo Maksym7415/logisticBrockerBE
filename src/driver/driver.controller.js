@@ -22,7 +22,7 @@ module.exports = {
                     user_id: req.body.id,
                 },
             })
-            res.send(promise);
+            res.send({promise, offSet: req.body.offSet});
         } catch (error) {
             console.log(error);
         }
