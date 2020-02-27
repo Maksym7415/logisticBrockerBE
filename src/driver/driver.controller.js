@@ -8,7 +8,8 @@ module.exports = {
             const promise = await seq.models.driver.findOne({
                 include: {
                     model: seq.models.stake,
-
+                    offset:req.body.offset,
+                    limit:req.body.limit||20,
                     required: false,
                     where: {
                         status: 'Accepted',

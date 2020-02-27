@@ -39,13 +39,13 @@ router.use('/manager', async (req, res, next) => {
     }
 });
 
-router.get('/manager/getOrders', getOrders);
+router.post('/manager/getOrders', getOrders);
 
 router.post('/manager/getOrderInfo', getOrderInfo);
 
 router.get('/manager/getDrivers', getDrivers);
 
-router.get('/manager/getStakes', getStakes);
+router.post('/manager/getStakes', getStakes);
 
 router.post('/manager/getDriver', getDriver);
 

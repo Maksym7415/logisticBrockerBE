@@ -11,6 +11,16 @@ module.exports = {
             name,
             email,
         } = req.body;
+        let loginParse = /(?=.*[a-z])(?=.*[0-9])(?=.*[A-Z])[a-z0-9A-Z]{6,}/g.test(login);
+        let passwordParse = /^(?=.*[a-z])(?=.*[0-9])(?=.*[A-Z])[a-z0-9A-Z]{6,8}$/g.test(password);
+        if (!loginParse || !passwordParse) {
+            next(createError(400, 'Invalid values', {
+                stack: {
+                    Login: !loginParse,
+                    Password: !passwordParse,
+                }
+            }));
+        }
         let loginCheck = await seq.models.user.count({
             where: {
                 login: login
@@ -23,7 +33,7 @@ module.exports = {
         });
         let phoneCheck = await seq.models.driver.count({
             where: {
-                phone: req.body.phone||null,
+                phone: req.body.phone || null,
             }
         });
         if (!loginCheck && !emailCheck && !phoneCheck) {
@@ -59,9 +69,14 @@ module.exports = {
             } catch (error) {
                 next(createError(400, error))
             }
-        }
-        else{
-            next(createError(400, 'Duplicate values', {stack:{Login: !!loginCheck, Email: !!emailCheck, Phone: !!phoneCheck}}));
+        } else {
+            next(createError(400, 'Duplicate values', {
+                stack: {
+                    Login: !!loginCheck,
+                    Email: !!emailCheck,
+                    Phone: !!phoneCheck
+                }
+            }));
         }
     },
 }
