@@ -11,8 +11,8 @@ module.exports = {
                     attributes: ['id', 'name'],
                 },
                 attributes: ['id', 'received', 'pickup', 'deliver', 'air_miles', 'earth_miles'],
-                limit:+req.body.limit||50,
-                offset:+req.body.offset,
+                limit:+req.body.limit || 50,
+                offset:+req.body.offset || 0,
             })
             res.json(promise);
         } catch (error) {
@@ -73,7 +73,7 @@ module.exports = {
                     }
                 ],
                 attributes: ['id', 'created', 'driver_price', 'broker_price', 'percent', 'status'],
-                offset: +req.body.offset,
+                offset: +req.body.offset || 0,
                 limit: +req.body.limit || 50,
             });
             res.json(promise);
