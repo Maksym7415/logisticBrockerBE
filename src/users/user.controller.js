@@ -27,7 +27,6 @@ module.exports = {
                     },
                     'secretKey'
                 );
-
                 user.token = token;
                 await user.save();
                 res.send(token);

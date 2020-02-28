@@ -16,6 +16,7 @@ module.exports = {
             let loginParse = /(?=.*[a-z])(?=.*[0-9])(?=.*[A-Z])[a-z0-9A-Z]{6,}/g.test(login);
             let passwordParse = /^(?=.*[a-z])(?=.*[0-9])(?=.*[A-Z])[a-z0-9A-Z]{6,8}$/g.test(password);
             let emailParse = /^[a-zA-Z0-9]+\@[a-z]+\.[a-z]{2,5}$/g.test(email);
+            let phoneParse = /^\d{8,12}$/.test(phone);
             
             let loginCheck = await seq.models.user.count({
                 where: {
@@ -34,7 +35,6 @@ module.exports = {
             });
             if (!loginCheck && !emailCheck && !phoneCheck) {
                 if (role == 'driver') {
-                    let phoneParse = /^\d{8,12}$/.test(phone);
                     if (!loginParse || !passwordParse || !emailParse || !phoneParse) {
                         next(createError(400, 'Invalid values', {
                             stack: {
@@ -50,7 +50,7 @@ module.exports = {
                             login,
                             password: hash,
                             role,
-                            email: email || null,
+                            email: email,
                         });
                         await seq.models.driver.create({
                             name,
@@ -59,6 +59,7 @@ module.exports = {
                             user_id: query.id,
                             vehicle_id: req.body.vehicle,
                         });    
+                        res.send("OK");
                     }
 
                 }
@@ -77,19 +78,24 @@ module.exports = {
                             login,
                             password: hash,
                             role,
-                            email: email || null,
+                            email: email,
                         });
                     if(role == 'admin'){
                         await seq.models.admin.create({
                             name,
                             user_id: query.id,
                         });
+                        res.send("OK");
                     }
                     else if(role == 'manager'){
                         await seq.models.manager.create({
                             name,
                             user_id: query.id,
                         });
+                        res.send("OK");
+                    }
+                    else{
+                        next(createError(400, "Error"));
                     }
                 }
             } else {
