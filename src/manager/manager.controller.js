@@ -1,6 +1,7 @@
 const createError = require('http-errors');
 const seq = require('../database/dbmysql');
 const nodemailer = require('nodemailer');
+const { Op } = require('sequelize');
 
 module.exports = {
     getOrders: async (req, res, next) => {
@@ -12,8 +13,8 @@ module.exports = {
                     attributes: ['id', 'name'],
                 },
                 attributes: ['id', 'received', 'pickup', 'deliver', 'air_miles', 'earth_miles'],
-                limit:+req.body.limit||50,
-                offset:+req.body.offset,
+                limit:+req.body.limit || 50,
+                offset:+req.body.offset || 0,
             })
             res.json(promise);
         } catch (error) {
@@ -50,9 +51,12 @@ module.exports = {
             next(createError(400, error));
         }
     },
-    getStakes: async (req, res) => {
+    getStakes: async (req, res, next) => {
         try {
             const promise = await seq.models.stake.findAll({
+                where:{
+                    driver_id: req.body.driver || {[Op.any]:seq.literal('select id from drivers')},
+                },
                 include: [{
                         model: seq.models.manager,
                         attributes: {
@@ -74,7 +78,7 @@ module.exports = {
                     }
                 ],
                 attributes: ['id', 'created', 'driver_price', 'broker_price', 'percent', 'status'],
-                offset: +req.body.offset,
+                offset: +req.body.offset || 0,
                 limit: +req.body.limit || 50,
             });
             res.json(promise);
@@ -91,7 +95,7 @@ module.exports = {
                     id: req.body.id,
                 }
             });
-            res.send("Status changed to " + req.body.status);
+            res.send(req.body.status);
         } catch (error) {
             console.log(error);
             next(createError(400, error.message, {error}));
@@ -177,9 +181,10 @@ module.exports = {
             let {from,to,text,author} = req.body
             let transporter = nodemailer.createTransport({
                 host: "smtp.gmail.com",
+                service: "gmail",
                 auth: {
                     user: 'telesenstest@gmail.com',
-                    pass: '0000abcd'
+                    pass: '0000abcd',
                 }
             });
             if(!text){
