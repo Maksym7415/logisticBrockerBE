@@ -12,9 +12,6 @@ var cors = require('cors');
 const connection = require('./database/connection');
 const fs = require("fs")
 
-let subdomain = 'test'
-let socketPath = `/home/popovmaksim7415/node_hosts/${subdomain}`
-
 app.use(cors());
 
 app.use(bearerToken());
@@ -27,7 +24,6 @@ app.use(bodyParser.json());
 
 app.use('/api', userRouter, adminRouter, managerRouter, driverRouter);
 
-
 app.use((error, req, res, next) => {
     res.status(error.status || 404);
     res.send({
@@ -38,8 +34,7 @@ app.use((error, req, res, next) => {
 });
 
 seq.sync().then(() => {
-    app.listen(socketPath, () => {
-        console.log(`Listening on port ${socketPath}`);
-	fs.chmodSync(socketPath, '777')
+    app.listen(port = 8080, () => {
+        console.log(`Listening on port ${port}`);
     });
 });
