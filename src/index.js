@@ -1,6 +1,7 @@
 const express = require('express');
 const bearerToken = require('express-bearer-token');
 const app = express();
+const https = require('https');
 require('dotenv').config();
 const bodyParser = require('body-parser');
 const userRouter = require('./users/user.router');
@@ -10,7 +11,12 @@ const driverRouter = require('./driver/driver.router');
 const seq = require('./database/dbmysql');
 var cors = require('cors');
 const connection = require('./database/connection');
-const fs = require("fs")
+const fs = require("fs");
+
+const options = {
+      key: fs.readFileSync('../key.pem').toString(),
+      cert: fs.readFileSync('../cert.pem').toString()
+    };
 
 app.use(cors());
 
@@ -34,7 +40,7 @@ app.use((error, req, res, next) => {
 });
 
 seq.sync().then(() => {
-    app.listen(port = 8080, () => {
-        console.log(`Listening on port ${port}`);
+    https.createServer(options, app).listen(process.env.PORT, async () => {
+        console.log(`Listening on port ${process.env.PORT}`);
     });
 });
