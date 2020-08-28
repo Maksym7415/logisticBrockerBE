@@ -14,8 +14,8 @@ const connection = require('./database/connection');
 const fs = require("fs");
 
 const options = {
-      key: fs.readFileSync('./src/keys/secretkey.pem').toString(),
-      cert: fs.readFileSync('./src/keys/mycert.pem').toString()
+      key: fs.readFileSync('./src/keys/fullkey.pem').toString(),
+      cert: fs.readFileSync('./src/keys/fullcert.pem').toString()
     };
 
 app.use(cors());
