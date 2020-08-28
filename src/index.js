@@ -1,7 +1,7 @@
 const express = require('express');
 const bearerToken = require('express-bearer-token');
 const app = express();
-const https = require('https');
+const http = require('http').createServer(app);
 require('dotenv').config();
 const bodyParser = require('body-parser');
 const userRouter = require('./users/user.router');
@@ -40,7 +40,8 @@ app.use((error, req, res, next) => {
 });
 
 seq.sync().then(() => {
-    https.createServer(options, app).listen(8080, async () => {
+    http.listen(8080, async () => {
         console.log(`Listening on port ${8080}`);
     });
 });
+
