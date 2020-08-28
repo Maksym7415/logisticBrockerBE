@@ -40,7 +40,7 @@ app.use((error, req, res, next) => {
 });
 
 seq.sync().then(() => {
-    https.createServer(null, app).listen(8080, async () => {
+    https.createServer({}, app).listen(8080, async () => {
         console.log(`Listening on port ${8080}`);
     });
 });
