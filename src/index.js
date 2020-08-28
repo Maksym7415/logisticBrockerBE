@@ -16,9 +16,7 @@ const fs = require("fs");
 const options = {
     key: fs.readFileSync('./security/cert.key'),
     cert: fs.readFileSync('./security/cert.pem').toString(),
-    requestCert: false,
-    rejectUnauthorized: false
-    };
+};
 
 app.use(cors());
 
@@ -42,7 +40,7 @@ app.use((error, req, res, next) => {
 });
 
 seq.sync().then(() => {
-    https.createServer(options, app).listen(8080, async () => {
+    https.createServer(null, app).listen(8080, async () => {
         console.log(`Listening on port ${8080}`);
     });
 });
