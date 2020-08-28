@@ -14,8 +14,8 @@ const connection = require('./database/connection');
 const fs = require("fs");
 
 const options = {
-      key: fs.readFileSync('key.pem').toString(),
-      cert: fs.readFileSync('cert.pem').toString()
+      key: fs.readFileSync('./src/keys/key.pem').toString(),
+      cert: fs.readFileSync('./src/keys/cert.pem').toString()
     };
 
 app.use(cors());
@@ -40,7 +40,7 @@ app.use((error, req, res, next) => {
 });
 
 seq.sync().then(() => {
-    https.createServer(options, app).listen(process.env.PORT, async () => {
-        console.log(`Listening on port ${process.env.PORT}`);
+    https.createServer(options, app).listen(8080, async () => {
+        console.log(`Listening on port ${8080}`);
     });
 });
