@@ -15,7 +15,7 @@ const fs = require("fs");
 
 const options = {
     key: fs.readFileSync('./security/cert.key'),
-    cert: fs.readFileSync('./security/cert.pem'),
+    cert: fs.readFileSync('./security/cert.pem').toString(),
     requestCert: false,
     rejectUnauthorized: false
     };
