@@ -12,7 +12,7 @@ var cors = require('cors');
 const connection = require('./database/connection');
 const fs = require("fs")
 
-app.use(cors());
+// app.use(cors());
 
 app.use(bearerToken());
 
