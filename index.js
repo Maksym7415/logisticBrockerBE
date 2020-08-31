@@ -4,6 +4,8 @@ const app = express();
 const http = require('http').createServer(app);
 require('dotenv').config();
 const bodyParser = require('body-parser');
+const fs = require('fs')
+const https = require('https')
 const userRouter = require('./src/users/user.router');
 const adminRouter = require('./src/admin/admin.router');
 const managerRouter = require('./src/manager/manager.router');
@@ -16,12 +18,14 @@ app.use(cors());
 
 app.use(bearerToken());
 
+app.use(express.static(__dirname + '/static', { dotfiles: 'allow' }))
+
 app.use(bodyParser.urlencoded({
     extended: true
 }));
 
 app.use(bodyParser.json());
-app.get('/health-check', (req, res) => res.sendStatus(200))
+app.get('/health-check', (req, res) => res.send('Hello https'))
 
 app.use('/api', userRouter, adminRouter, managerRouter, driverRouter);
 
@@ -35,8 +39,17 @@ app.use((error, req, res, next) => {
 });
 
 seq.sync().then(() => {
-    http.listen(80, async () => {
-        console.log(`Listening on port ${80}`);
-    });
+https
+  .createServer(
+    {
+      key: fs.readFileSync('/etc/letsencrypt/live/logisticbrocker.hopto.org/privkey.pem'),
+      cert: fs.readFileSync('/etc/letsencrypt/live/logisticbrocker.hopto.org/cert.pem'),
+      ca: fs.readFileSync('/etc/letsencrypt/live/logisticbrocker.hopto.org/fullchain.pem'),
+    },
+    app
+  )
+  .listen(443, () => {
+    console.log('Listening...')
+  })   
 });
 
