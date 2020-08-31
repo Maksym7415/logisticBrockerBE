@@ -34,8 +34,8 @@ app.use((error, req, res, next) => {
 });
 
 seq.sync().then(() => {
-    http.listen(8080, async () => {
-        console.log(`Listening on port ${8080}`);
+    http.listen(80, async () => {
+        console.log(`Listening on port ${80}`);
     });
 });
 
