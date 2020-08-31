@@ -4,13 +4,13 @@ const app = express();
 const http = require('http').createServer(app);
 require('dotenv').config();
 const bodyParser = require('body-parser');
-const userRouter = require('./users/user.router');
-const adminRouter = require('./admin/admin.router');
-const managerRouter = require('./manager/manager.router');
-const driverRouter = require('./driver/driver.router');
-const seq = require('./database/dbmysql');
+const userRouter = require('./src/users/user.router');
+const adminRouter = require('./src/admin/admin.router');
+const managerRouter = require('./src/manager/manager.router');
+const driverRouter = require('./src/driver/driver.router');
+const seq = require('./src/database/dbmysql');
 var cors = require('cors');
-const connection = require('./database/connection');
+const connection = require('./src/database/connection');
 
 app.use(cors());
 
