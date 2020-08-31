@@ -21,6 +21,7 @@ app.use(bodyParser.urlencoded({
 }));
 
 app.use(bodyParser.json());
+app.get('/health-check', (req, res) => res.sendStatus(200))
 
 app.use('/api', userRouter, adminRouter, managerRouter, driverRouter);
 
