@@ -11,12 +11,6 @@ const driverRouter = require('./driver/driver.router');
 const seq = require('./database/dbmysql');
 var cors = require('cors');
 const connection = require('./database/connection');
-const fs = require("fs");
-
-const options = {
-    key: fs.readFileSync('./security/cert.key'),
-    cert: fs.readFileSync('./security/cert.pem').toString(),
-};
 
 app.use(cors());
 
