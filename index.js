@@ -20,12 +20,12 @@ app.use(bearerToken());
 
 app.use(express.static(__dirname + '/static', { dotfiles: 'allow' }))
 
+
 app.use(bodyParser.urlencoded({
     extended: true
 }));
 
 app.use(bodyParser.json());
-app.get('/health-check', (req, res) => res.send('Hello https'))
 
 app.use('/api', userRouter, adminRouter, managerRouter, driverRouter);
 
