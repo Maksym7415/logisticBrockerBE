@@ -16,6 +16,8 @@ app.use(cors());
 
 app.use(bearerToken());
 
+app.use(express.static('static'));
+
 app.use(bodyParser.urlencoded({
     extended: true
 }));
